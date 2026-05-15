@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── FinanceFlow DoMore Theme — Dark First ─────────────────────────────── */
+:root {
+  color-scheme: dark;
+
+  /* Brand */
+  --neon: #AAFF00;
+  --neon-dim: rgba(170,255,0,0.12);
+  --neon-glow: rgba(170,255,0,0.25);
+
+  /* Backgrounds */
+  --bg: #0A0A0F;
+  --surface: #17171D;
+  --surface2: #1E1E26;
+  --card: #1A1A22;
+  --card2: #20202A;
+
+  /* Text */
+  --text: #F2F2FF;
+  --text2: #C8C8E0;
+  --muted: #7A7A96;
+  --muted2: #4A4A62;
+
+  /* Borders */
+  --border: #252530;
+  --border2: #303040;
+
+  /* Finance colors */
+  --income: #00E5A0;
+  --expense: #FF6060;
+  --savings: #C084FC;
+  --credit: #FFBB45;
+}
+
+/* Light mode override (apenas quando o usuário troca em Settings) */
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #F2F2FF;
+  --surface: #FFFFFF;
+  --surface2: #F0F0F8;
+  --card: #FFFFFF;
+  --card2: #F5F5FC;
+  --text: #0F0F1A;
+  --text2: #3A3A50;
+  --muted: #7A7A96;
+  --border: #E0E0F0;
+  --border2: #D0D0E8;
+}

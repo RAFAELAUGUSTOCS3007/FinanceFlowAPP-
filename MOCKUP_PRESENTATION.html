@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  width: 1400px;
+  height: 900px;
+  background: #0A0A0F;
+  font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  overflow: hidden;
+  position: relative;
+}
+
+/* ── Background glows ── */
+.bg-glow-1 {
+  position: absolute; top: -100px; right: 100px;
+  width: 700px; height: 700px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(170,255,0,0.06) 0%, transparent 65%);
+  pointer-events: none;
+}
+.bg-glow-2 {
+  position: absolute; bottom: -100px; right: -50px;
+  width: 500px; height: 500px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(192,132,252,0.05) 0%, transparent 65%);
+  pointer-events: none;
+}
+.bg-glow-3 {
+  position: absolute; top: 50%; right: 48%;
+  width: 300px; height: 300px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(0,229,160,0.04) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+/* ── LEFT PANEL ── */
+.left-panel {
+  position: absolute;
+  left: 52px; top: 0; bottom: 0;
+  width: 340px;
+  display: flex; flex-direction: column; justify-content: center;
+  padding-bottom: 30px;
+}
+
+.logo-row {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 32px;
+}
+.logo-box {
+  width: 36px; height: 36px; border-radius: 9px; background: #AAFF00;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 900; color: #0A0A0F; letter-spacing: -0.5px;
+}
+.logo-name { font-size: 20px; font-weight: 900; color: #F2F2FF; letter-spacing: -0.5px; }
+.logo-name span { color: #AAFF00; }
+
+.headline { margin-bottom: 24px; }
+.headline h1 {
+  font-size: 52px; font-weight: 900; line-height: 1.05;
+  letter-spacing: -2px; color: #F2F2FF;
+}
+.headline h1 .neon { color: #AAFF00; }
+
+.divider {
+  width: 60px; height: 3px; background: #AAFF00;
+  border-radius: 2px; margin-bottom: 20px;
+}
+
+.tagline { font-size: 13px; color: #7A7A96; line-height: 1.7; margin-bottom: 28px; }
+.tagline strong { color: #C8C8E0; font-weight: 600; }
+
+.features { display: flex; flex-direction: column; gap: 11px; margin-bottom: 32px; }
+.feat {
+  display: flex; align-items: center; gap: 10px;
+}
+.feat-dot {
+  width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+}
+.feat-text { font-size: 13px; color: #C8C8E0; font-weight: 500; }
+
+.badges { display: flex; gap: 8px; flex-wrap: wrap; }
+.badge {
+  padding: 6px 14px; border-radius: 6px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.5px;
+  border: 1.5px solid;
+}
+
+/* ── PHONES AREA ── */
+.phones-area {
+  position: absolute;
+  left: 420px; right: 0; top: 0; bottom: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* The fan container */
+.fan {
+  position: relative;
+  width: 860px; height: 820px;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* Each phone wrapper — flat, no 3D distortion */
+.phone-wrap {
+  position: absolute;
+  transform-origin: center bottom;
+}
+
+/* Screen card — clean, proportional */
+.screen-card {
+  width: 230px;
+  height: 490px;
+  border-radius: 36px;
+  overflow: hidden;
+  background: #0A0A0F;
+  border: 2px solid #2A2A35;
+  box-shadow:
+    0 30px 80px rgba(0,0,0,0.7),
+    0 0 0 1px rgba(255,255,255,0.04) inset;
+  position: relative;
+}
+
+/* Top status bar area */
+.status-bar {
+  height: 14px;
+  background: inherit;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+/* Pill cutout (no camera, just the pill) */
+.pill-cut {
+  width: 56px; height: 7px; background: #000;
+  border-radius: 4px; margin-top: 5px;
+}
+
+/* ─── SCREEN CONTENT STYLES ─── */
+.scr { width: 100%; height: 100%; display: flex; flex-direction: column; font-family: -apple-system, Arial, sans-serif; }
+
+/* Gradient header */
+.gh {
+  padding: 14px 10px 10px;
+  background: linear-gradient(160deg, #182A0A 0%, #101A0C 50%, #0A0A0F 100%);
+  border-bottom: 1px solid rgba(170,255,0,0.07);
+  flex-shrink: 0;
+}
+.gh-red { background: linear-gradient(160deg, #1A0A08 0%, #120808 50%, #0A0A0F 100%); }
+.gh-green { background: linear-gradient(160deg, #081A10 0%, #081210 50%, #0A0A0F 100%); }
+.gh-purple { background: linear-gradient(160deg, #120A1A 0%, #0E0812 50%, #0A0A0F 100%); }
+.gh-amber { background: linear-gradient(160deg, #1A1200 0%, #111000 50%, #0A0A0F 100%); }
+
+.wm { font-size: 10px; font-weight: 900; }
+.wm .w { color: #F2F2FF; }
+.wm .n { color: #AAFF00; }
+.hdr-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 7px; }
+.av { width: 16px; height: 16px; border-radius: 4px; background: #AAFF00; display: flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 900; color: #0A0A0F; }
+
+.big-title { font-size: 18px; font-weight: 900; color: #F2F2FF; letter-spacing: -0.8px; margin-bottom: 2px; }
+.sub-txt { font-size: 8px; color: #7A7A96; font-weight: 500; }
+.sub-colored { font-size: 8px; font-weight: 500; }
+
+.bal-lbl { font-size: 7px; font-weight: 700; letter-spacing: 1.5px; color: #7A7A96; margin-bottom: 3px; }
+.bal-val { font-size: 22px; font-weight: 900; color: #F2F2FF; letter-spacing: -1.5px; line-height: 1; }
+.bal-cents { font-size: 12px; font-weight: 400; color: #5A5A70; }
+.chip {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 7px; border-radius: 4px;
+  font-size: 7.5px; font-weight: 700; margin-top: 5px;
+}
+.chip-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+
+.month-row { display: flex; gap: 3px; margin-top: 6px; }
+.mp { padding: 3px 7px; border-radius: 4px; font-size: 7px; font-weight: 700; color: #5A5A70; border: 1px solid #252530; }
+.mp.a { background: #AAFF00; color: #0A0A0F; border-color: #AAFF00; }
+
+/* Content area */
+.cnt { flex: 1; padding: 8px 8px 0; overflow: hidden; display: flex; flex-direction: column; gap: 6px; }
+
+.sec-lbl { font-size: 7px; font-weight: 700; letter-spacing: 1.5px; color: #5A5A70; text-transform: uppercase; }
+
+/* 2x2 grid */
+.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+.sc {
+  background: #1A1A22; border: 1px solid #252530; border-radius: 8px;
+  padding: 7px 6px 5px; position: relative; overflow: hidden;
+}
+.sc::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; }
+.sc.green::after { background: #00E5A0; }
+.sc.red::after { background: #FF6060; }
+.sc.amber::after { background: #FFBB45; }
+.sc.purple::after { background: #C084FC; }
+.sc-tag { font-size: 7px; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 3px; }
+.sc-val { font-size: 11px; font-weight: 900; color: #F2F2FF; letter-spacing: -0.5px; }
+.sc-sub { font-size: 6.5px; color: #5A5A70; margin-top: 2px; }
+
+/* Card block */
+.blk { background: #1A1A22; border: 1px solid #252530; border-radius: 8px; padding: 7px; }
+.blk-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+.blk-ttl { font-size: 7.5px; font-weight: 700; color: #C8C8E0; text-transform: uppercase; letter-spacing: 0.5px; }
+.blk-val { font-size: 18px; font-weight: 900; letter-spacing: -1px; }
+.blk-link { font-size: 7px; font-weight: 700; color: #AAFF00; }
+
+.bar-bg { background: #252530; border-radius: 3px; height: 4px; overflow: hidden; }
+.bar-f { height: 4px; border-radius: 3px; }
+.bar-lbs { display: flex; justify-content: space-between; font-size: 6.5px; color: #5A5A70; margin-top: 3px; }
+
+/* Health */
+.health-row { display: flex; align-items: center; gap: 8px; }
+.ring-area { position: relative; width: 38px; height: 38px; flex-shrink: 0; }
+.ring-area svg { width: 38px; height: 38px; }
+.ring-num { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 900; color: #AAFF00; }
+.h-tip { font-size: 7px; color: #C8C8E0; line-height: 1.55; }
+.sbadge { display: inline-block; background: rgba(170,255,0,0.1); color: #AAFF00; font-size: 6.5px; font-weight: 700; padding: 2px 6px; border-radius: 3px; margin-bottom: 5px; letter-spacing: 0.5px; }
+
+/* TX row */
+.tx { display: flex; align-items: center; gap: 5px; padding: 5px 0; border-bottom: 1px solid #1A1A28; }
+.tx:last-child { border-bottom: none; }
+.tx-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.tx-cat { font-size: 6.5px; color: #5A5A70; }
+.tx-nm { font-size: 7.5px; font-weight: 600; color: #F2F2FF; }
+.tx-tag { display: inline-block; font-size: 6px; font-weight: 700; padding: 1px 4px; border-radius: 3px; margin-top: 2px; letter-spacing: 0.3px; }
+.tx-amt { font-size: 8px; font-weight: 900; color: #FF6060; margin-left: auto; white-space: nowrap; }
+
+/* Tab bar */
+.tb { background: #0E0E15; border-top: 1px solid rgba(170,255,0,0.07); display: flex; padding: 5px 0 8px; flex-shrink: 0; }
+.tb-i { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.tb-ic { font-size: 12px; line-height: 1; }
+.tb-lb { font-size: 5.5px; font-weight: 700; letter-spacing: 0.3px; color: #505080; }
+.tb-i.a .tb-lb { color: #AAFF00; }
+.tb-dot { width: 4px; height: 4px; border-radius: 50%; background: #AAFF00; }
+
+/* Filters */
+.frow { display: flex; gap: 3px; }
+.fc { padding: 3px 7px; border-radius: 4px; font-size: 6.5px; font-weight: 700; border: 1px solid #252530; color: #5A5A70; }
+.fc.a { background: #AAFF00; color: #0A0A0F; border-color: #AAFF00; }
+
+/* Stats strip */
+.ss { display: flex; background: #141420; border: 1px solid #1E1E2C; border-radius: 6px; }
+.ss-i { flex: 1; padding: 4px; text-align: center; }
+.ss-l { font-size: 6px; color: #5A5A70; font-weight: 600; margin-bottom: 2px; }
+.ss-v { font-size: 8px; font-weight: 900; }
+.ss-d { width: 1px; background: #1E1E2C; margin: 3px 0; }
+
+/* List card */
+.lc { background: #1A1A22; border: 1px solid #252530; border-radius: 8px; overflow: hidden; flex: 1; }
+
+/* Fixed item */
+.fi { display: flex; align-items: center; gap: 6px; padding: 6px 7px; border-bottom: 1px solid #1A1A28; }
+.fi:last-child { border-bottom: none; }
+.fi-chk { width: 14px; height: 14px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 900; flex-shrink: 0; }
+.fi-chk.d { background: #AAFF00; color: #0A0A0F; }
+.fi-chk.t { border: 1.5px solid #303040; }
+.fi-nm { flex: 1; font-size: 8px; font-weight: 600; color: #F2F2FF; }
+.fi-nm.d { color: #404055; text-decoration: line-through; }
+.fi-dt { font-size: 6px; color: #404055; }
+.fi-am { font-size: 8.5px; font-weight: 900; }
+
+/* Income item */
+.ii { display: flex; align-items: center; gap: 5px; padding: 5px 7px; border-bottom: 1px solid #1A1A28; }
+.ii:last-child { border-bottom: none; }
+.rk { width: 16px; height: 16px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 7.5px; font-weight: 900; flex-shrink: 0; }
+.rk.t { background: #AAFF00; color: #0A0A0F; }
+.rk.r { background: #1A1A28; color: #5A5A70; border: 1px solid #252530; }
+.ii-nm { font-size: 7.5px; font-weight: 700; color: #F2F2FF; }
+.ii-pct { font-size: 6px; color: #5A5A70; margin-top: 1px; }
+.ii-val { font-size: 8px; font-weight: 900; margin-left: auto; white-space: nowrap; }
+.ii-bar { height: 3px; background: #252530; border-radius: 2px; margin: 3px 0 1px; overflow: hidden; }
+.ii-bf { height: 3px; border-radius: 2px; }
+
+/* Goal block */
+.gb { background: #1A1A22; border: 1px solid #252530; border-radius: 8px; padding: 7px; }
+.gb-h { display: flex; align-items: center; gap: 5px; margin-bottom: 6px; }
+.gb-ico { width: 22px; height: 22px; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0; }
+.gb-tt { font-size: 8px; font-weight: 900; color: #F2F2FF; text-transform: uppercase; }
+.gb-st { font-size: 6.5px; color: #5A5A70; }
+.gb-cta { margin-left: auto; padding: 3px 7px; border-radius: 5px; border: 1.5px solid; background: transparent; font-size: 6.5px; font-weight: 700; }
+.gb-ns { display: flex; justify-content: space-between; margin-bottom: 6px; }
+.gn-l { font-size: 6px; color: #5A5A70; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 2px; }
+.gn-b { font-size: 14px; font-weight: 900; letter-spacing: -0.8px; }
+.gn-s { font-size: 10px; font-weight: 700; }
+.ms-r { display: flex; gap: 3px; margin-top: 5px; }
+.ms { font-size: 6.5px; font-weight: 900; padding: 2px 5px; border-radius: 3px; border: 1px solid; }
+.gb-ft { display: flex; justify-content: space-between; align-items: center; margin-top: 5px; }
+.gb-pc { font-size: 7px; font-weight: 900; }
+.gb-pl { font-size: 6.5px; font-weight: 700; padding: 2px 5px; border-radius: 4px; }
+
+/* Income banner */
+.ib { background: rgba(0,229,160,0.07); border: 1px solid rgba(0,229,160,0.15); border-radius: 6px; padding: 5px 7px; display: flex; align-items: center; justify-content: space-between; }
+.ib-l { font-size: 7px; font-weight: 700; color: #00E5A0; letter-spacing: 0.5px; }
+.ib-s { font-size: 6px; color: rgba(0,229,160,0.5); margin-top: 1px; }
+.ib-v { font-size: 12px; font-weight: 900; color: #00E5A0; letter-spacing: -0.5px; }
+
+/* CTA button */
+.cta { width: 100%; padding: 8px; background: #AAFF00; border-radius: 7px; font-size: 7.5px; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; color: #0A0A0F; text-align: center; margin-top: 5px; }
+
+/* Summ */
+.sm { background: #141420; border: 1px solid #1E1E2C; border-radius: 7px; padding: 7px; }
+.sm-t { font-size: 6.5px; font-weight: 700; color: #5A5A70; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 7px; }
+.sm-r { display: flex; }
+.sm-i { flex: 1; text-align: center; }
+.sm-l { font-size: 6px; color: #5A5A70; font-weight: 600; margin-bottom: 3px; }
+.sm-v { font-size: 9px; font-weight: 900; }
+.sm-d { width: 1px; background: #1E1E2C; margin: 2px 0; }
+
+/* Neon button outline */
+.nb { padding: 4px 8px; border-radius: 5px; border: 1.5px solid #AAFF00; background: transparent; color: #AAFF00; font-size: 7px; font-weight: 700; display: inline-block; }
+.nb-g { border-color: #00E5A0; color: #00E5A0; }
+.nb-p { border-color: #C084FC; color: #C084FC; }
+
+/* Pend item */
+.pd { display: flex; justify-content: space-between; align-items: center; padding: 4px 7px; background: #141420; border-radius: 5px; margin-top: 4px; }
+.pd-n { font-size: 7.5px; font-weight: 600; color: #C8C8E0; }
+.pd-a { font-size: 8px; font-weight: 900; }
+</style>
+</head>
+<body>
+
+<div class="bg-glow-1"></div>
+<div class="bg-glow-2"></div>
+<div class="bg-glow-3"></div>
+
+<!-- ══════════════ LEFT PANEL ══════════════ -->
+<div class="left-panel">
+  <div class="logo-row">
+    <div class="logo-box">FF</div>
+    <div class="logo-name">Finance<span>Flow</span></div>
+  </div>
+
+  <div class="headline">
+    <h1>Controle<br><span class="neon">Financeiro</span><br>Inteligente</h1>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="tagline">
+    App de finanças pessoais com <strong>design premium</strong>,<br>
+    <strong>sincronização Google Drive</strong> e <strong>dark mode</strong><br>
+    nativo para iOS e Android.
+  </div>
+
+  <div class="features">
+    <div class="feat"><div class="feat-dot" style="background:#AAFF00;"></div><div class="feat-text">Dashboard com saúde financeira</div></div>
+    <div class="feat"><div class="feat-dot" style="background:#00E5A0;"></div><div class="feat-text">Controle de despesas e entradas</div></div>
+    <div class="feat"><div class="feat-dot" style="background:#C084FC;"></div><div class="feat-text">Metas e reservas com milestones</div></div>
+    <div class="feat"><div class="feat-dot" style="background:#FFBB45;"></div><div class="feat-text">Backup automático no Google Drive</div></div>
+    <div class="feat"><div class="feat-dot" style="background:#FF6060;"></div><div class="feat-text">Biometria e proteção de dados</div></div>
+  </div>
+
+  <div class="badges">
+    <div class="badge" style="border-color:#AAFF00;color:#AAFF00;">iOS + Android</div>
+    <div class="badge" style="border-color:#00E5A0;color:#00E5A0;">Dark Mode</div>
+    <div class="badge" style="border-color:#C084FC;color:#C084FC;">v2.0</div>
+    <div class="badge" style="border-color:#FFBB45;color:#FFBB45;">React Native</div>
+  </div>
+</div>
+
+<!-- ══════════════ PHONES FAN ══════════════ -->
+<div class="phones-area">
+<div class="fan">
+
+  <!-- ═══ PHONE 1 — Metas (far left, rotated -22°) ═══ -->
+  <div class="phone-wrap" style="transform: rotate(-22deg) translateX(-300px) translateY(30px); z-index:1; opacity:0.82;">
+    <div class="screen-card">
+      <div class="status-bar"><div class="pill-cut"></div></div>
+      <div class="scr">
+        <div class="gh gh-purple">
+          <div class="hdr-row">
+            <div><div class="big-title">METAS</div><div class="sub-txt">Total guardado R$ 13.700</div></div>
+          </div>
+        </div>
+        <div class="cnt">
+          <div class="gb">
+            <div class="gb-h">
+              <div class="gb-ico" style="background:rgba(192,132,252,0.12);">■</div>
+              <div><div class="gb-tt">Emergência</div><div class="gb-st">Meta R$ 86.221,70</div></div>
+              <div class="gb-cta" style="border-color:#C084FC;color:#C084FC;">+ Guardar</div>
+            </div>
+            <div class="gb-ns">
+              <div><div class="gn-l">Guardado</div><div class="gn-b" style="color:#C084FC;">R$ 8.500</div></div>
+              <div style="text-align:right;"><div class="gn-l">Faltante</div><div class="gn-s" style="color:#FF6060;">R$ 77.721</div></div>
+            </div>
+            <div class="bar-bg"><div class="bar-f" style="width:10%;background:#C084FC;"></div></div>
+            <div class="ms-r">
+              <div class="ms" style="background:rgba(192,132,252,0.12);border-color:#C084FC;color:#C084FC;">25%</div>
+              <div class="ms" style="border-color:#252530;color:#404055;">50%</div>
+              <div class="ms" style="border-color:#252530;color:#404055;">75%</div>
+              <div class="ms" style="border-color:#252530;color:#404055;">100%</div>
+            </div>
+            <div class="gb-ft">
+              <div class="gb-pc" style="color:#C084FC;">10% concluído</div>
+              <div class="gb-pl" style="background:rgba(192,132,252,0.1);color:#C084FC;">+R$ 500 este mês</div>
+            </div>
+          </div>
+          <div class="gb">
+            <div class="gb-h">
+              <div class="gb-ico" style="background:rgba(255,187,69,0.12);">★</div>
+              <div><div class="gb-tt">Minha Meta</div><div class="gb-st">Meta R$ 25.652,50</div></div>
+              <div class="gb-cta" style="border-color:#FFBB45;color:#FFBB45;">+ Guardar</div>
+            </div>
+            <div class="gb-ns">
+              <div><div class="gn-l">Guardado</div><div class="gn-b" style="color:#FFBB45;">R$ 5.200</div></div>
+              <div style="text-align:right;"><div class="gn-l">Faltante</div><div class="gn-s" style="color:#FF6060;">R$ 20.452</div></div>
+            </div>
+            <div class="bar-bg"><div class="bar-f" style="width:20%;background:#FFBB45;"></div></div>
+            <div class="ms-r">
+              <div class="ms" style="background:rgba(255,187,69,0.12);border-color:#FFBB45;color:#FFBB45;">25%</div>
+              <div class="ms" style="border-color:#252530;color:#404055;">50%</div>
+              <div class="ms" style="border-color:#252530;color:#404055;">75%</div>
+              <div class="ms" style="border-color:#252530;color:#404055;">100%</div>
+            </div>
+            <div class="gb-ft"><div class="gb-pc" style="color:#FFBB45;">20% concluído</div></div>
+          </div>
+          <div class="sm">
+            <div class="sm-t">Consolidado</div>
+            <div class="sm-r">
+              <div class="sm-i"><div class="sm-l">Emergência</div><div class="sm-v" style="color:#C084FC;">R$ 8.500</div></div>
+              <div class="sm-d"></div>
+              <div class="sm-i"><div class="sm-l">Meta</div><div class="sm-v" style="color:#FFBB45;">R$ 5.200</div></div>
+              <div class="sm-d"></div>
+              <div class="sm-i"><div class="sm-l">Total</div><div class="sm-v" style="color:#AAFF00;">R$ 13.700</div></div>
+            </div>
+          </div>
+          <div class="cta">REGISTRAR RESERVA</div>
+        </div>
+        <div class="tb">
+          <div class="tb-i"><div class="tb-ic" style="color:#505080;">⌂</div><div class="tb-lb">Início</div></div>
+          <div class="tb-i"><div class="tb-ic" style="color:#505080;">↓</div><div class="tb-lb">Despesas</div></div>
+          <div class="tb-i"><div class="tb-ic" style="color:#505080;">≡</div><div class="tb-lb">Fixas</div></div>
+          <div class="tb-i"><div class="tb-ic" style="color:#505080;">↑</div><div class="tb-lb">Entradas</div></div>
+          <div class="tb-i a"><div class="tb-ic" style="color:#AAFF00;">◎</div><div class="tb-lb">Metas</div><div class="tb-dot"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ PHONE 2 — Fixas (left, rotated -11°) ═══ -->
+  <div class="phone-wrap" style="transform: rotate(-11deg) translateX(-150px) translateY(10px); z-index:2; opacity:0.90;">
+    <div class="screen-card">
+      <div class="status-bar"><div class="pill-cut"></div></div>
+      <div class="scr">
+        <div class="gh gh-amber">
+          <div class="hdr-row">
+            <div>
+              <div class="big-title">FIXAS</div>
+              <div class="sub-txt">7 de 10 pagas neste mês</div>
+            </div>
+            <div class="nb">+ Adicionar</div>
+          </div>
+          <div style="margin-top:6px;">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;">
+              <div style="font-size:7px;font-weight:700;color:#7A7A96;letter-spacing:1px;">PROGRESSO</div>
+              <div style="font-size:22px;font-weight:900;color:#AAFF00;letter-spacing:-1px;">72%</div>
+            </div>
+            <div class="bar-bg"><div class="bar-f" style="width:72%;background:#AAFF00;"></div></div>
+            <div class="bar-lbs"><span>Pago R$ 2.827</span><span>Pendente R$ 607</span></div>
+          </div>
+        </div>
+        <div class="cnt" style="padding-top:5px;">
+          <div class="lc">
+            <div class="fi"><div class="fi-chk d">✓</div><div style="flex:1;"><div class="fi-nm d">Aluguel</div><div class="fi-dt">Pago 19/03/2026</div></div><div class="fi-am" style="color:#00E5A0;">R$ 1.000</div></div>
+            <div class="fi"><div class="fi-chk d">✓</div><div style="flex:1;"><div class="fi-nm d">Terapia</div><div class="fi-dt">Pago 19/03/2026</div></div><div class="fi-am" style="color:#00E5A0;">R$ 750</div></div>
+            <div class="fi"><div class="fi-chk d">✓</div><div style="flex:1;"><div class="fi-nm d">Luz</div><div class="fi-dt">Pago 02/03/2026</div></div><div class="fi-am" style="color:#00E5A0;">R$ 327</div></div>
+            <div class="fi"><div class="fi-chk d">✓</div><div style="flex:1;"><div class="fi-nm d">Internet</div><div class="fi-dt">Pago 12/03/2026</div></div><div class="fi-am" style="color:#00E5A0;">R$ 108</div></div>
+            <div class="fi"><div class="fi-chk d">✓</div><div style="flex:1;"><div class="fi-nm d">Selma</div><div class="fi-dt">Pago 19/03/2026</div></div><div class="fi-am" style="color:#00E5A0;">R$ 310</div></div>
+            <div class="fi"><div class="fi-chk t"></div><div style="flex:1;"><div class="fi-nm">Condomínio</div></div><div class="fi-am" style="color:#FFBB45;">R$ 350</div></div>
+            <div class="fi"><div class="fi-chk t"></div><div style="flex:1;"><div class="fi-nm">Acupuntura</div></div><div class="fi-am" style="color:#FFBB45;">R$ 120</div></div>
+            <div class="fi" style="border-bottom:none;"><div class="fi-chk t"></div><div style="flex:1;"><div class="fi-nm">DAS</div></div><div class="fi-am" style="color:#FFBB45;">R$ 86</div></div>
+          </div>
+        </div>
+        <div class="tb">
+          <div class="tb-i"><div class="tb-ic" style="color:#505080;">⌂</div><div class="tb-lb">Início</div></div>
+          <div class="tb-i"><div class="tb-ic" style="color:#505080;">↓</div><div class="tb-lb">Despesas</div></div>
+          <div class="tb-i a"><div class="tb-ic" style="color:#AAFF00;">≡</div><div class="tb-lb">Fixas</div><div class="tb-dot"></div></div>
+          <div class="tb-i"><div class="tb-ic" style="color:#505080;">↑</div><div class="tb-lb">Entradas</div></div>
+          <div class="tb-i"><div class="tb-ic" style="color:#505080;">◎</div><div class="tb-lb">Metas</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ PHONE 3 — Dashboard (CENTER, 0°, largest) ═══ -->
+  <div class="phone-wrap" style="transform: rotate(0deg) translateY(-10px); z-index:5;">
+    <div class="screen-card" style="width:250px;height:530px;border-color:#2E2E3E;box-shadow:0 40px 100px rgba(0,0,0,0.8),0 0 0 1px rgba(170,255,0,0.06) inset;">
+      <div class="status-bar"><div class="pill-cut"></div></div>
+      <div class="scr">
+        <div class="gh" style="padding:16px 12px 12px;">
+          <div class="hdr-row">
+            <div class="wm" style="font-size:11px;"><span class="w">Finance</span><span class="n">Flow</span></div>
+            <div class="av" style="width:18px;height:18px;border-radius:5px;">R</div>
+          </div>
+          <div class="bal-lbl">SALDO DISPONÍVEL</div>
+          <div class="bal-val" style="font-size:26px;">R$ 9.521<span class="bal-cents" style="font-size:14px;">,54</span></div>
+          <div class="chip" style="background:rgba(0,229,160,0.1);color:#00E5A0;">
+            <span class="chip-dot" style="background:#00E5A0;"></span>Saldo positivo
+          </div>
+          <div class="month-row" style="margin-top:8px;">
+            <div class="mp">Jan</div><div class="mp">Fev</div><div class="mp a">Mar</div>
+            <div class="mp">Abr</div><div class="mp">Mai</div><div class="mp">Jun</div>
+          </div>
+        </div>
+        <div class="cnt">
+          <div class="sec-lbl">RESUMO · MARÇO 2026</div>
+          <div class="g2">
+            <div class="sc green"><div class="sc-tag" style="color:#00E5A0;">ENTRADAS</div><div class="sc-val">R$ 16.891</div><div class="sc-sub">Total do mês</div></div>
+            <div class="sc red"><div class="sc-tag" style="color:#FF6060;">SAÍDAS</div><div class="sc-val">R$ 5.184</div><div class="sc-sub">Var. + fixas</div></div>
+            <div class="sc amber"><div class="sc-tag" style="color:#FFBB45;">CRÉDITO</div><div class="sc-val">R$ 693</div><div class="sc-sub">Variáveis</div></div>
+            <div class="sc purple"><div class="sc-tag" style="color:#C084FC;">RESERVAS</div><div class="sc-val">R$ 2.185</div><div class="sc-sub">Guardado</div></div>
+          </div>
+          <div class="blk">
+            <div class="sbadge">EXCELENTE · 82/100</div>
+            <div class="health-row">
+              <div class="ring-area">
+                <svg viewBox="0 0 38 38">
+                  <circle cx="19" cy="19" r="15" fill="none" stroke="#252530" stroke-width="4.5"/>
+                  <circle cx="19" cy="19" r="15" fill="none" stroke="#AAFF00" stroke-width="4.5"
+                    stroke-dasharray="77 94" stroke-dashoffset="23" stroke-linecap="round"
+                    transform="rotate(-90 19 19)"/>
+                </svg>
+                <div class="ring-num">82</div>
+              </div>
+              <div class="h-tip">Você está no caminho certo! Continue controlando seus gastos.</div>
+            </div>
+          </div>
+          <div class="blk">
+            <div class="blk-row">
+              <div class="blk-ttl">Orçamento</div>
+              <div class="blk-val" style="color:#AAFF00;font-size:20px;">31%</div>
+            </div>
+            <div class="bar-bg"><div class="bar-f" style="width:31%;background:#AAFF00;"></div></div>
+            <div class="bar-lbs"><span>Gasto R$ 5.184</span><span>Renda R$ 16.891</span></div>
+          </div>
+          <div class="blk" style="padding:6px 7px;">
+            <div class="blk-ttl" style="margin-bottom:5px;">ÚLTIMAS TRANSAÇÕES</div>
+            <div class="tx">
+              <div class="tx-dot" style="background:#00E5A0;"></div>
+              <div style="flex:1;"><div class="tx-cat">Saúde · 18 mar</div><div class="tx-nm">Saúde e Bem-estar</div><div class="tx-tag" style="background:rgba(0,229,160,0.1);color:#00E5A0;">ESSENCIAL</div></div>
+              <div class="tx-amt">-R$ 31,45</div>
+            </div>
+            <div class="tx">
+              <div class="tx-dot" style="background:#FFBB45;"></div>
+              <div style="flex:1;"><div class="tx-cat">Alimentação · 17 mar</div><div class="tx-nm">Alimentação</div></div>
+              <div class="tx-amt">-R$ 25,48</div>
+            </div>
+            <div class="tx" style="border-bottom:none;">
+              <div class="tx-dot" style="background:#C084FC;"></div>
+              <div style="flex:1;"><div class="tx-cat">Contas · 09 mar</div><div class="tx-nm">Contas</div><div class="tx-tag" style="background:rgba(0,229,160,0.1);color:#00E5A0;">ESSENCIAL</div></div>
+              <div class="tx-amt">-R$ 139,79</div>
+            </div>
+          </div>
+        </div>
+        <div class="tb">
+          <div class="tb-i a"><div class="tb-ic" style="color:#AAFF00;">⌂</div><div class="tb-lb">Início</div><div class="tb-dot"></div></div>
+          <div class="tb-i"><div class="tb-ic" style="color:#505080;">↓</div><div class="tb-lb">Despesas</div></div>
+          <div class="tb-i"><div class="tb-ic" style="color:#505080;">≡</div><div class="tb-lb">Fixas</div></div>
+          <div class="tb-i"><div class="tb-ic" style="color:#505080;">↑</div><div class="tb-lb">Entradas</div></div>
+          <div class="tb-i"><div class="tb-ic" style="color:#505080;">◎</div><div class="tb-lb">Metas</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ PHONE 4 — Despesas (right, rotated +11°) ═══ -->
+  <div class="phone-wrap" style="transform: rotate(11deg) translateX(150px) translateY(10px); z-index:2; opacity:0.90;">
+    <div class="screen-card">
+      <div class="status-bar"><div class="pill-cut"></div></div>
+      <div class="scr">
+        <div class="gh gh-red">
+          <div class="hdr-row">
+            <div>
+              <div class="big-title">DESPESAS</div>
+              <div class="sub-colored" style="color:#FF6060;">R$ 693,57 em março</div>
+            </div>
+            <div class="nb">+ NOVO</div>
+          </div>
+        </div>
+        <div class="cnt">
+          <div class="frow">
+            <div class="fc a">Todos</div>
+            <div class="fc">Aliment.</div>
+            <div class="fc">Saúde</div>
+            <div class="fc">Contas</div>
+          </div>
+          <div class="ss">
+            <div class="ss-i"><div class="ss-l">Essenciais</div><div class="ss-v" style="color:#00E5A0;">R$ 524</div></div>
+            <div class="ss-d"></div>
+            <div class="ss-i"><div class="ss-l">Não essenc.</div><div class="ss-v" style="color:#FFBB45;">R$ 169</div></div>
+            <div class="ss-d"></div>
+            <div class="ss-i"><div class="ss-l">Total</div><div class="ss-v" style="color:#F2F2FF;">12 itens</div></div>
+          </div>
+          <div class="lc">
+            <div class="tx" style="padding:6px 8px;">
+              <div class="tx-dot" style="background:#00E5A0;"></div>
+              <div style="flex:1;"><div class="tx-cat">Saúde · 18 mar · Pix</div><div class="tx-nm">Saúde e Bem-estar</div><div class="tx-tag" style="background:rgba(0,229,160,0.1);color:#00E5A0;">ESSENCIAL</div></div>
+              <div class="tx-amt">-R$ 31,45</div>
+            </div>
+            <div class="tx" style="padding:6px 8px;">
+              <div class="tx-dot" style="background:#FFBB45;"></div>
+              <div style="flex:1;"><div class="tx-cat">Aliment. · 17 mar · Pix</div><div class="tx-nm">Alimentação</div></div>
+              <div class="tx-amt">-R$ 25,48</div>
+            </div>
+            <div class="tx" style="padding:6px 8px;">
+              <div class="tx-dot" style="background:#FFBB45;"></div>
+              <div style="flex:1;"><div class="tx-cat">Aliment. · 17 mar · Pix</div><div class="tx-nm">Alimentação</div></div>
+              <div class="tx-amt">-R$ 13,50</div>
+            </div>
+            <div class="tx" style="padding:6px 8px;">
+              <div class="tx-dot" style="background:#00E5A0;"></div>
+              <div style="flex:1;"><div class="tx-cat">Saúde · 17 mar · Pix</div><div class="tx-nm">Saúde e Bem-estar</div><div class="tx-tag" style="background:rgba(0,229,160,0.1);color:#00E5A0;">ESSENCIAL</div></div>
+              <div class="tx-amt">-R$ 34,21</div>
+            </div>
+            <div class="tx" style="padding:6px 8px;">
+              <div class="tx-dot" style="background:#FFBB45;"></div>
+              <div style="flex:1;"><div class="tx-cat">Aliment. · 16 mar · Pix</div><div class="tx-nm">Alimentação</div></div>
+              <div class="tx-amt">-R$ 30,38</div>
+            </div>
+            <div class="tx" style="padding:6px 8px;border-bottom:none;">
+              <div class="tx-dot" style="background:#C084FC;"></div>
+              <div style="flex:1;"><div class="tx-cat">Contas · 09 mar · Pix</div><div class="tx-nm">Contas</div><div class="tx-tag" style="background:rgba(0,229,160,0.1);color:#00E5A0;">ESSENCIAL</div></div>
+              <div class="tx-amt">-R$ 139,79</div>
+            </div>
+          </div>
+        </div>
+        <div class="tb">
+          <div class="tb-i"><div class="tb-ic" style="color:#505080;">⌂</div><div class="tb-lb">Início</div></div>
+          <div class="tb-i a"><div class="tb-ic" style="color:#AAFF00;">↓</div><div class="tb-lb">Despesas</div><div class="tb-dot"></div></div>
+          <div class="tb-i"><div class="tb-ic" style="color:#505080;">≡</div><div class="tb-lb">Fixas</div></div>
+          <div class="tb-i"><div class="tb-ic" style="color:#505080;">↑</div><div class="tb-lb">Entradas</div></div>
+          <div class="tb-i"><div class="tb-ic" style="color:#505080;">◎</div><div class="tb-lb">Metas</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ PHONE 5 — Entradas (far right, rotated +22°) ═══ -->
+  <div class="phone-wrap" style="transform: rotate(22deg) translateX(300px) translateY(30px); z-index:1; opacity:0.82;">
+    <div class="screen-card">
+      <div class="status-bar"><div class="pill-cut"></div></div>
+      <div class="scr">
+        <div class="gh gh-green">
+          <div class="hdr-row">
+            <div>
+              <div class="big-title">ENTRADAS</div>
+              <div class="sub-colored" style="color:#00E5A0;">R$ 16.891,66 em março</div>
+            </div>
+            <div class="nb nb-g">+ Adicionar</div>
+          </div>
+        </div>
+        <div class="cnt">
+          <div class="ib">
+            <div><div class="ib-l">5 FONTES DE RENDA</div><div class="ib-s">Maior: Bonificação (39%)</div></div>
+            <div class="ib-v">R$ 16.891</div>
+          </div>
+          <div class="lc">
+            <div class="ii">
+              <div class="rk t">1</div>
+              <div style="flex:1;">
+                <div class="ii-nm">Bonificação Caique</div>
+                <div class="ii-bar"><div class="ii-bf" style="width:39%;background:#AAFF00;"></div></div>
+                <div class="ii-pct">39% do total</div>
+              </div>
+              <div class="ii-val" style="color:#AAFF00;">R$ 6.574</div>
+            </div>
+            <div class="ii">
+              <div class="rk r">2</div>
+              <div style="flex:1;">
+                <div class="ii-nm">Salário Bia</div>
+                <div class="ii-bar"><div class="ii-bf" style="width:32%;background:#00E5A0;"></div></div>
+                <div class="ii-pct">32% do total</div>
+              </div>
+              <div class="ii-val" style="color:#00E5A0;">R$ 5.427</div>
+            </div>
+            <div class="ii">
+              <div class="rk r">3</div>
+              <div style="flex:1;">
+                <div class="ii-nm">Adiantamento Caique</div>
+                <div class="ii-bar"><div class="ii-bf" style="width:16%;background:#FFBB45;"></div></div>
+                <div class="ii-pct">16% do total</div>
+              </div>
+              <div class="ii-val" style="color:#FFBB45;">R$ 2.680</div>
+            </div>
+            <div class="ii">
+              <div class="rk r">4</div>
+              <div style="flex:1;">
+                <div class="ii-nm">Salário Caique</div>
+                <div class="ii-bar"><div class="ii-bf" style="width:12%;background:#FFBB45;"></div></div>
+                <div class="ii-pct">12% do total</div>
+              </div>
+              <div class="ii-val" style="color:#FFBB45;">R$ 2.034</div>
+            </div>
+            <div class="ii" style="border-bottom:none;">
+              <div class="rk r">5</div>
+              <div style="flex:1;">
+                <div class="ii-nm">Containner</div>
+                <div class="ii-bar"><div class="ii-bf" style="width:1%;background:#404055;"></div></div>
+                <div class="ii-pct">1% do total</div>
+              </div>
+              <div class="ii-val" style="color:#5A5A70;">R$ 175</div>
+            </div>
+          </div>
+        </div>
+        <div class="tb">
+          <div class="tb-i"><div class="tb-ic" style="color:#505080;">⌂</div><div class="tb-lb">Início</div></div>
+          <div class="tb-i"><div class="tb-ic" style="color:#505080;">↓</div><div class="tb-lb">Despesas</div></div>
+          <div class="tb-i"><div class="tb-ic" style="color:#505080;">≡</div><div class="tb-lb">Fixas</div></div>
+          <div class="tb-i a"><div class="tb-ic" style="color:#AAFF00;">↑</div><div class="tb-lb">Entradas</div><div class="tb-dot"></div></div>
+          <div class="tb-i"><div class="tb-ic" style="color:#505080;">◎</div><div class="tb-lb">Metas</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /fan -->
+</div><!-- /phones-area -->
+
+</body>
+</html>
